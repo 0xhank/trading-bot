@@ -1,0 +1,414 @@
+{
+  "spot": {
+    "sandbox": true,
+    "createOrder": {
+      "marginMode": false,
+      "triggerPrice": false,
+      "triggerPriceType": null,
+      "triggerDirection": false,
+      "stopLossPrice": false,
+      "takeProfitPrice": false,
+      "attachedStopLossTakeProfit": {
+        "triggerPriceType": {
+          "last": false,
+          "mark": false,
+          "index": false
+        },
+        "triggerPrice": true,
+        "type": true,
+        "price": true
+      },
+      "timeInForce": {
+        "IOC": true,
+        "FOK": false,
+        "PO": true,
+        "GTD": false,
+        "GTC": true
+      },
+      "hedged": false,
+      "trailing": false,
+      "leverage": false,
+      "marketBuyByCost": false,
+      "marketBuyRequiresPrice": false,
+      "selfTradePrevention": false,
+      "iceberg": false,
+      "stopLoss": {
+        "triggerPriceType": {
+          "last": false,
+          "mark": false,
+          "index": false
+        },
+        "triggerPrice": true,
+        "type": true,
+        "price": true
+      },
+      "takeProfit": {
+        "triggerPriceType": {
+          "last": false,
+          "mark": false,
+          "index": false
+        },
+        "triggerPrice": true,
+        "type": true,
+        "price": true
+      },
+      "symbolRequired": true
+    },
+    "createOrders": {
+      "max": 1000,
+      "symbolRequired": true
+    },
+    "fetchMyTrades": {
+      "marginMode": false,
+      "limit": 2000,
+      "daysBack": null,
+      "untilDays": null,
+      "symbolRequired": true
+    },
+    "fetchOrder": {
+      "marginMode": false,
+      "trigger": false,
+      "trailing": false,
+      "symbolRequired": true
+    },
+    "fetchOpenOrders": {
+      "marginMode": false,
+      "limit": 2000,
+      "trigger": false,
+      "trailing": false,
+      "symbolRequired": true
+    },
+    "fetchOrders": {
+      "marginMode": false,
+      "limit": 2000,
+      "daysBack": null,
+      "untilDays": null,
+      "trigger": false,
+      "trailing": false,
+      "symbolRequired": true
+    },
+    "fetchClosedOrders": {
+      "marginMode": false,
+      "limit": 2000,
+      "daysBack": null,
+      "daysBackCanceled": null,
+      "untilDays": null,
+      "trigger": false,
+      "trailing": false,
+      "symbolRequired": true
+    },
+    "fetchOHLCV": {
+      "limit": 5000,
+      "symbolRequired": true
+    }
+  },
+  "swap": {
+    "linear": {
+      "sandbox": true,
+      "createOrder": {
+        "marginMode": false,
+        "triggerPrice": false,
+        "triggerPriceType": null,
+        "triggerDirection": false,
+        "stopLossPrice": true,
+        "takeProfitPrice": true,
+        "attachedStopLossTakeProfit": null,
+        "timeInForce": {
+          "IOC": true,
+          "FOK": false,
+          "PO": true,
+          "GTD": false,
+          "GTC": true
+        },
+        "hedged": false,
+        "trailing": false,
+        "leverage": false,
+        "marketBuyByCost": false,
+        "marketBuyRequiresPrice": false,
+        "selfTradePrevention": false,
+        "iceberg": false,
+        "stopLoss": null,
+        "takeProfit": null,
+        "symbolRequired": true
+      },
+      "createOrders": {
+        "max": 1000,
+        "symbolRequired": true
+      },
+      "fetchMyTrades": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "untilDays": null,
+        "symbolRequired": true
+      },
+      "fetchOrder": {
+        "marginMode": false,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOpenOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "untilDays": null,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchClosedOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "daysBackCanceled": null,
+        "untilDays": null,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOHLCV": {
+        "limit": 5000,
+        "symbolRequired": true
+      }
+    },
+    "inverse": {
+      "sandbox": true,
+      "createOrder": {
+        "marginMode": false,
+        "triggerPrice": false,
+        "triggerPriceType": null,
+        "triggerDirection": false,
+        "stopLossPrice": true,
+        "takeProfitPrice": true,
+        "attachedStopLossTakeProfit": null,
+        "timeInForce": {
+          "IOC": true,
+          "FOK": false,
+          "PO": true,
+          "GTD": false,
+          "GTC": true
+        },
+        "hedged": false,
+        "trailing": false,
+        "leverage": false,
+        "marketBuyByCost": false,
+        "marketBuyRequiresPrice": false,
+        "selfTradePrevention": false,
+        "iceberg": false,
+        "stopLoss": null,
+        "takeProfit": null,
+        "symbolRequired": true
+      },
+      "createOrders": {
+        "max": 1000,
+        "symbolRequired": true
+      },
+      "fetchMyTrades": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "untilDays": null,
+        "symbolRequired": true
+      },
+      "fetchOrder": {
+        "marginMode": false,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOpenOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "untilDays": null,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchClosedOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "daysBackCanceled": null,
+        "untilDays": null,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOHLCV": {
+        "limit": 5000,
+        "symbolRequired": true
+      }
+    }
+  },
+  "future": {
+    "linear": {
+      "sandbox": true,
+      "createOrder": {
+        "marginMode": false,
+        "triggerPrice": false,
+        "triggerPriceType": null,
+        "triggerDirection": false,
+        "stopLossPrice": true,
+        "takeProfitPrice": true,
+        "attachedStopLossTakeProfit": null,
+        "timeInForce": {
+          "IOC": true,
+          "FOK": false,
+          "PO": true,
+          "GTD": false,
+          "GTC": true
+        },
+        "hedged": false,
+        "trailing": false,
+        "leverage": false,
+        "marketBuyByCost": false,
+        "marketBuyRequiresPrice": false,
+        "selfTradePrevention": false,
+        "iceberg": false,
+        "stopLoss": null,
+        "takeProfit": null,
+        "symbolRequired": true
+      },
+      "createOrders": {
+        "max": 1000,
+        "symbolRequired": true
+      },
+      "fetchMyTrades": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "untilDays": null,
+        "symbolRequired": true
+      },
+      "fetchOrder": {
+        "marginMode": false,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOpenOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "untilDays": null,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchClosedOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "daysBackCanceled": null,
+        "untilDays": null,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOHLCV": {
+        "limit": 5000,
+        "symbolRequired": true
+      }
+    },
+    "inverse": {
+      "sandbox": true,
+      "createOrder": {
+        "marginMode": false,
+        "triggerPrice": false,
+        "triggerPriceType": null,
+        "triggerDirection": false,
+        "stopLossPrice": true,
+        "takeProfitPrice": true,
+        "attachedStopLossTakeProfit": null,
+        "timeInForce": {
+          "IOC": true,
+          "FOK": false,
+          "PO": true,
+          "GTD": false,
+          "GTC": true
+        },
+        "hedged": false,
+        "trailing": false,
+        "leverage": false,
+        "marketBuyByCost": false,
+        "marketBuyRequiresPrice": false,
+        "selfTradePrevention": false,
+        "iceberg": false,
+        "stopLoss": null,
+        "takeProfit": null,
+        "symbolRequired": true
+      },
+      "createOrders": {
+        "max": 1000,
+        "symbolRequired": true
+      },
+      "fetchMyTrades": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "untilDays": null,
+        "symbolRequired": true
+      },
+      "fetchOrder": {
+        "marginMode": false,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOpenOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "untilDays": null,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchClosedOrders": {
+        "marginMode": false,
+        "limit": 2000,
+        "daysBack": null,
+        "daysBackCanceled": null,
+        "untilDays": null,
+        "trigger": false,
+        "trailing": false,
+        "symbolRequired": true
+      },
+      "fetchOHLCV": {
+        "limit": 5000,
+        "symbolRequired": true
+      }
+    }
+  },
+  "option": null
+}

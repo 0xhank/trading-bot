@@ -1,0 +1,14 @@
+[project]
+name = "trading-bot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "ccxt>=4.5.2",
+    "hyperliquid-python-sdk>=0.18.0",
+    "loguru>=0.7.3",
+    "pandas>=2.3.2",
+    "stockstats>=0.6.5",
+    "watchdog>=6.0.0",
+]
