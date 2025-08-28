@@ -5,11 +5,12 @@ from typing import Dict, Any, List, Optional
 import json
 from lib.logger import get_market_data_logger
 import time
+from stockstats import StockDataFrame as Sdf
 logger = get_market_data_logger()
+
 
 class Coin:
     """Manages data storage for a specific coin across multiple subscription types"""
-    
     def __init__(self, info: Info, coin_symbol: str, user_address: Optional[str] = None):
         self.coin_symbol = coin_symbol
         self.user_address = user_address
@@ -20,6 +21,8 @@ class Coin:
             'ohclv': pd.DataFrame(columns=['openMs', 'closeMs', 'coin', 'interval', 'open', 'close', 'high', 'low', 'volume', 'numTrades']),
 
             'bbo': pd.DataFrame(columns=['timestamp', 'coin', 'time', 'bid_px', 'bid_sz', 'bid_n', 'ask_px', 'ask_sz', 'ask_n']),
+            
+            'technical_indicators': pd.DataFrame(columns=['timestamp', 'rsi_14', 'close_20_ema', 'close_50_ema', 'macd_20_50', 'macds_20_50'])
         }
         
     def subscribe_to_ohclv(self):
@@ -51,7 +54,7 @@ class Coin:
     def create_handler(self, subscription_type: str):
         """Create a handler function for a specific subscription type"""
         def handler(data):
-            print(f"Received data for {self.coin_symbol}:{subscription_type}")
+            print(f"Received data for {self.coin_symbol}:{subscription_type}: {data}")
             try:
                 timestamp = datetime.now()
                 rows = self._parse_data(subscription_type, data, timestamp)
@@ -71,6 +74,10 @@ class Coin:
                             [self.dataframes[df_key], new_df], 
                             ignore_index=True
                         )
+                        
+                        # Update technical indicators when new candle data is received
+                        if subscription_type == 'candle':
+                            self.update_technical_indicators()
                 
                 logger.debug(f"[{self.coin_symbol}:{subscription_type}] Received data - {len(rows) if rows else 0} records")
                 
@@ -168,6 +175,123 @@ class Coin:
         
         return []
     
+    def calculate_rsi(self) -> Optional[float]:
+        """Calculate RSI using stockstats methodology (14-period)"""
+        try:
+            ohclv_df = self.get_dataframe('ohclv')
+            if ohclv_df.empty or len(ohclv_df) < 15:  # Need at least 15 periods for RSI calculation
+                return None
+            
+            # Convert to format expected by stockstats
+            # StockStats expects columns: open, high, low, close, volume
+            stock_df = ohclv_df[['open', 'high', 'low', 'close', 'volume']].copy()
+            stock_df = stock_df.astype(float)
+            
+            # Create StockDataFrame
+            stock = Sdf.retype(stock_df)
+            
+            # Calculate RSI (this automatically calculates rsi_14)
+            rsi_series = stock['rsi_14']
+            
+            # Return the latest RSI value
+            if not rsi_series.empty and not pd.isna(rsi_series.iloc[-1]):
+                return float(rsi_series.iloc[-1])
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error calculating RSI for {self.coin_symbol}: {e}")
+            return None
+    
+    def calculate_macd(self) -> tuple[Optional[float], Optional[float]]:
+        """Calculate MACD using 20/50 EMA periods with 9-period signal line"""
+        try:
+            ohclv_df = self.get_dataframe('ohclv')
+            if ohclv_df.empty or len(ohclv_df) < 60:  # Need at least 60 periods for 50 EMA + signal calculation
+                return None, None
+            
+            # Convert to format expected by stockstats
+            stock_df = ohclv_df[['open', 'high', 'low', 'close', 'volume']].copy()
+            stock_df = stock_df.astype(float)
+            
+            # Create StockDataFrame
+            stock = Sdf.retype(stock_df)
+            
+            # Calculate EMAs (this automatically calculates close_20_ema and close_50_ema)
+            ema_20 = stock['close_20_ema']
+            ema_50 = stock['close_50_ema']
+            
+            # Calculate MACD line (20 EMA - 50 EMA)
+            stock['macd_20_50'] = ema_20 - ema_50
+            
+            # Calculate MACD signal line (9-period EMA of MACD line)
+            stock['macds_20_50'] = stock['macd_20_50'].ewm(span=9).mean()
+            
+            # Get latest values
+            latest_macd = stock['macd_20_50'].iloc[-1]
+            latest_signal = stock['macds_20_50'].iloc[-1]
+            
+            # Return None if values are NaN
+            if pd.isna(latest_macd) or pd.isna(latest_signal):
+                return None, None
+                
+            return float(latest_macd), float(latest_signal)
+            
+        except Exception as e:
+            logger.error(f"Error calculating MACD for {self.coin_symbol}: {e}")
+            return None, None
+    
+    def update_technical_indicators(self):
+        """Update the technical indicators dataframe with latest RSI and MACD values"""
+        try:
+            print(f"Updating technical indicators for {self.coin_symbol}")
+            # Calculate current indicators
+            rsi = self.calculate_rsi()
+            macd, macd_signal = self.calculate_macd()
+            
+            if rsi is None and macd is None:
+                return  # No data to update
+            
+            # Get the current OHCLV data to calculate EMAs for storage
+            ohclv_df = self.get_dataframe('ohclv')
+            if ohclv_df.empty:
+                return
+                
+            # Convert to stockstats format to get EMA values
+            stock_df = ohclv_df[['open', 'high', 'low', 'close', 'volume']].copy()
+            stock_df = stock_df.astype(float)
+            stock = Sdf.retype(stock_df)
+            
+            # Get latest EMA values
+            ema_20 = stock['close_20_ema'].iloc[-1] if not stock['close_20_ema'].empty else None
+            ema_50 = stock['close_50_ema'].iloc[-1] if not stock['close_50_ema'].empty else None
+            
+            # Create new row for technical indicators
+            new_row = {
+                'timestamp': datetime.now(),
+                'rsi_14': rsi,
+                'close_20_ema': ema_20,
+                'close_50_ema': ema_50,
+                'macd_20_50': macd,
+                'macds_20_50': macd_signal
+            }
+            
+            new_df = pd.DataFrame([new_row])
+            
+            # Update the technical indicators dataframe
+            if self.dataframes['technical_indicators'].empty:
+                self.dataframes['technical_indicators'] = new_df
+            else:
+                self.dataframes['technical_indicators'] = pd.concat(
+                    [self.dataframes['technical_indicators'], new_df], 
+                    ignore_index=True
+                )
+            print(f"Updated technical indicators for {self.coin_symbol} - RSI: {rsi}, MACD: {macd}")
+            logger.debug(f"[{self.coin_symbol}] Updated technical indicators - RSI: {rsi}, MACD: {macd}")
+            
+        except Exception as e:
+            logger.error(f"Error updating technical indicators for {self.coin_symbol}: {e}")
+    
     def get_dataframe(self, subscription_type: str) -> pd.DataFrame:
         """Get DataFrame for a specific subscription type"""
         return self.dataframes.get(subscription_type, pd.DataFrame())
@@ -176,6 +300,27 @@ class Coin:
         """Get all DataFrames for this coin"""
         return self.dataframes.copy()
     
+    def get_latest_rsi(self) -> Optional[float]:
+        """Get the latest RSI value from technical indicators"""
+        indicators_df = self.get_dataframe('technical_indicators')
+        if not indicators_df.empty and 'rsi_14' in indicators_df.columns:
+            latest_rsi = indicators_df['rsi_14'].iloc[-1]
+            return float(latest_rsi) if not pd.isna(latest_rsi) else None
+        return None
+    
+    def get_latest_macd(self) -> tuple[Optional[float], Optional[float]]:
+        """Get the latest MACD and signal values from technical indicators"""
+        indicators_df = self.get_dataframe('technical_indicators')
+        if not indicators_df.empty and 'macd_20_50' in indicators_df.columns and 'macds_20_50' in indicators_df.columns:
+            latest_macd = indicators_df['macd_20_50'].iloc[-1]
+            latest_signal = indicators_df['macds_20_50'].iloc[-1]
+            
+            macd_val = float(latest_macd) if not pd.isna(latest_macd) else None
+            signal_val = float(latest_signal) if not pd.isna(latest_signal) else None
+            
+            return macd_val, signal_val
+        return None, None
+
     def get_latest_price(self) -> Optional[float]:
         """Get the latest price from BBO data"""
         bbo_df = self.get_dataframe('bbo')
